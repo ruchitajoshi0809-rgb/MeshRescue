@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MeshRescue | Emergency Response Network</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+     <nav class="navbar">
+        <div class="logo">
+            <span>🚑</span>
+            <strong>MeshRescue</strong>
+        </div>
+
+        <div class = "system-status">
+            <span class="status-dot"></span>
+            System Ready
+        </div>
+     </nav>
+
+     <!-- Main Dashboard -->
+      <main class="dashboard">
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <p class="eyebrow">DECENTRALIZED EMERGENCY NETWORK</p>
+
+                <h1>
+                    Clear the way<br>
+                    <span>before it's too late.</span>
+                </h1>
+                
+                <p class="description">
+                    MeshRescue enables emergency alerts to travel through nearby vehicles using intelligent multi-hop communication.
+                </p>
+
+                <button id="emergencyButton" class="emergency-btn">
+                    🚨 START EMERGENCY
+                </button>
+            </div>
+
+            <!-- Emergency Status Card -->
+             <div class="card-header">
+                <div class="card-header">
+                    <span>EMERGENCY STATUS</span>
+                    <span class="live-badge">LIVE</span>
+                </div>
+
+                <div class="status-main">
+                    <div class = "big-status-icon">🚑</div>
+
+                    <div>
+                        <h2 id="emergencyStatus">SYSTEM READY</h2>
+                        <p id="statusMessage">
+                            Waiting for an emergency alert...
+                        </p>
+                    </div>
+                </div>
+             </div>
+        </section>
+
+        <!-- Statistics -->
+        <section class="stats">
+            <div class="stat-card">
+                <span class="stat-icon">📡</span>
+                <div>
+                    <p>Network Nodes</p>
+                    <h2>05</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-icon">🧠</span>
+                <div>
+                    <p>AI Relay Status</p>
+                    <h2 id="relayStatus">IDLE</h2>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-icon">🔗</span>
+                <div>
+                    <p>Active Hops</p>
+                    <h2 id="hopCount">0</h2>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <span class="stat-icon">🔊</span>
+                <div>
+                    <p>Voice Alerts</p>
+                    <h2 id="alertCount">0</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vehicle Network -->
+        <section class="network-section">
+
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">LIVE NETWORK</p>
+                <h2>Nearby Vehicles</h2>
+            </div>
+
+            <span class="network-label">
+                • 5 NODES DETECTED
+            </span>
+        </div>
+
+        <div class="vehicle-grid">
+
+            <div class="vehicle-card">
+                <div class="vehicle-top">
+                    <span class="vehicle-icon">🚗</span>
+                    <span class="vehicle-id">NODE A</span>
+                </div>
+
+                <h3>Vehicle A</h3>
+
+                <div class="vehicle-info">
+                    <span>Direction</span>
+                    <strong>East →</strong>
+                </div>
+
+                <div class="vehicle-info">
+                    <span>Distance</span>
+                    <strong>42 m</strong>
+                </div>
+
+                <div class="vehicle-status waiting">
+                    WAITING
+                </div>
+            </div>
+
+            <div class="vehicle-card">
+                <div class="vehicle-top">
+                    <span class="vehicle-icon">🚙</span>
+                    <span class="vehicle-id">NODE B</span>
+                </div>
+
+                <h3>Vehicle B</h3>
+
+                <div class="vehicle-info">
+                    <span>Direction</span>
+                    <strong>East →</strong>
+                </div>
+
+                <div class="vehicle-info">
+                    <span>Distance</span>
+                    <strong>67 m</strong>
+                </div>
+
+                <div class="vehicle-status waiting">
+                    WAITING
+                </div>
+            </div>
+
+            <div class="vehicle-card">
+                <div class="vehicle-top">
+                    <span class="vehicle-icon">🚘</span>
+                    <span class="vehicle-id">NODE C</span>
+                </div>
+
+                <h3>Vehicle C</h3>
+
+                <div class="vehicle-info">
+                    <span>Direction</span>
+                    <strong>West ←</strong>
+                </div>
+
+                <div class="vehicle-info">
+                    <span>Distance</span>
+                    <strong>85 m</strong>
+                </div>
+
+                <div class="vehicle-status waiting">
+                    WAITING
+                </div>
+            </div>
+
+            <div class="vehicle-card">
+                <div class="vehicle-top">
+                    <span class="vehicle-icon">🚕</span>
+                    <span class="vehicle-id">NODE D</span>
+                </div>
+
+                <h3>Vehicle D</h3>
+
+                <div class="vehicle-info">
+                    <span>Direction</span>
+                    <strong>North ↑</strong>
+                </div>
+
+                <div class="vehicle-info">
+                    <span>Distance</span>
+                    <strong>102 m</strong>
+                </div>
+
+                <div class="vehicle-status waiting">
+                    WAITING
+                </div>
+            </div>
+
+            <div class="vehicle-card">
+                <div class="vehicle-top">
+                    <span class="vehicle-icon">🚗</span>
+                    <span class="vehicle-id">NODE E</span>
+                </div>
+
+                <h3>Vehicle E</h3>
+
+                <div class="vehicle-info">
+                    <span>Direction</span>
+                    <strong>East →</strong>
+                </div>
+
+                <div class="vehicle-info">
+                    <span>Distance</span>
+                    <strong>135 m</strong>
+                </div>
+
+                <div class="vehicle-status waiting">
+                    WAITING
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Relay Path -->
+     <section class="relay-section">
+        
+        <div class="section-heading">
+            <div>
+                <p class="eyebrow">INTELLIGENT FORWARDING</p>
+                <h2>Relay Path</h2>
+            </div>
+        </div>
+
+        <div class="relay-path">
+            <div class="relay-node ambulance">
+                <span>🚑</span>
+                <strong>Ambulance</strong>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="relay-node">
+                <span>🚗</span>
+                <strong>NODE A</strong>
+            </div>
+
+            <div class="relay-path">
+            <div class="relay-node">
+                <span>🚙</span>
+                <strong>NODE B</strong>
+            </div>
+
+            <div class="path-line"></div>
+
+            <div class="relay-node">
+                <span>🚕</span>
+                <strong>NODE E</strong>
+            </div>
+            
+        </div>
+
+        <p class="relay-description">
+            AI selects the most relevant vehicles to propogate the emergency message while suppressing unnecessary alerts.
+        </p>
+     </section>
+    </main>
+
+    <footer>
+        <p>MeshRescue • AI-Powered Emergency Communication</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
