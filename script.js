@@ -87,9 +87,9 @@ emergencyButton.addEventListener("click", function () {
 
         hopCount.textContent = "3";
 
-        if (vehicleStatuses[2]) {
-            vehicleStatuses[2].textContent = "ALERTED";
-            vehicleStatuses[2].classList.add("alerted");
+        if (vehicleStatuses[4]) {
+            vehicleStatuses[4].textContent = "ALERTED";
+            vehicleStatuses[4].classList.add("alerted");
         }
 
     }, 6000);
