@@ -10,6 +10,7 @@ const alertCount = document.getElementById("alertCount");
 
 const vehicleStatuses = document.querySelectorAll(".vehicle-status");
 const vehicleCards = document.querySelectorAll(".vehicle-card");
+const bestRelay = document.getElementById("bestRelay");
 
 let emergencyRunning = false;
 
@@ -74,9 +75,7 @@ scanButton.addEventListener("click", function () {
             }
 
             // Create network information
-            const networkInfo = document.createElement("div");
-
-            networkInfo.className = "network-info";
+            const relayScore = calculateRelayScore(vehicle);
 
             networkInfo.innerHTML = `
                 <span>Signal</span>
@@ -84,6 +83,9 @@ scanButton.addEventListener("click", function () {
 
                 <span>Relevance</span>
                 <strong>${vehicle.relevance}%</strong>
+
+                <span>Relay Score</span>
+                <strong>${relayScore}/100</strong>
 
                 <span>Network</span>
                 <strong>CONNECTED</strong>
@@ -108,6 +110,29 @@ scanButton.addEventListener("click", function () {
         }, index * 600);
 
     });
+
+    setTimeout(() => {
+
+        const scoredVehicles = selectBestRelay();
+
+        const winner = scoredVehicles[0];
+
+        bestRelay.innerHTML = `
+        <strong>🚗 VEHICLE ${winner.id}</strong>
+
+        <span>
+        Relay Score: ${winner.relayScore}/100
+        </span>
+
+        <span>
+        ${winner.distance}m • ${winner.direction}
+        </span>
+
+        <span>
+        ${winner.signal} Signal
+        </span>
+        `;
+    }, 3500);
 
 
     setTimeout(() => {
@@ -219,3 +244,49 @@ emergencyButton.addEventListener("click", function () {
     }, 7500);
 
 });
+
+function calculateRelayScore(vehicle) {
+    let score = 0;
+
+    //Direction
+    if(vehicle.direction === "East →") {
+        score += 40;
+    } else {
+        score += 10;
+    }
+
+    if (vehicle.distance <= 50) {
+        score += 35;
+    } else if (vehicle.distance <= 100) {
+        score += 25;
+    } else {
+        score += 15;
+    }
+
+    // Signal
+    if(vehicle.signal === "Strong") {
+        score += 25;
+    } else if (vehicle.signal === "Medium") {
+        score += 15;
+    } else {
+        score += 5;
+    }
+    return score;
+
+}
+
+function selectBestRelay() {
+    const scoredVehicles = vehicles.map(vehicle => {
+        return {
+            ...vehicle,
+            relayScore: calculateRelayScore(vehicle)
+        };
+    });
+
+    scoredVehicles.sort(
+        (a,b) => b.relayScore - a.relayScore
+    );
+
+    return scoredVehicles;
+}
+console.log(selectBestRelay());

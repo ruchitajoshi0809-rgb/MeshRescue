@@ -461,3 +461,40 @@ footer {
     border: 1px solid rgba(255, 184, 77, 0.35);
 }
 
+/* INTELLIGENT RELAY */
+
+.relay-decision {
+    margin-top: 24px;
+    padding: 20px;
+
+    border: 1px solid #26313d;
+    border-radius: 12px;
+
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.relay-decision h2 {
+    margin: 6px 0 16px;
+}
+
+#bestRelay {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    padding: 16px;
+
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 10px;
+
+    background: rgba(74, 222, 128, 0.05);
+}
+
+#bestRelay strong {
+    font-size: 18px;
+}
+
+#bestRelay span {
+    color: #94a3b8;
+    font-size: 13px;
+}
