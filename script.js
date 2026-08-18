@@ -1,4 +1,5 @@
 const emergencyButton = document.getElementById("emergencyButton");
+const scanButton = document.getElementById("scanButton");
 
 const emergencyStatus = document.getElementById("emergencyStatus");
 const statusMessage = document.getElementById("statusMessage");
@@ -8,10 +9,116 @@ const hopCount = document.getElementById("hopCount");
 const alertCount = document.getElementById("alertCount");
 
 const vehicleStatuses = document.querySelectorAll(".vehicle-status");
+const vehicleCards = document.querySelectorAll(".vehicle-card");
 
 let emergencyRunning = false;
 
+// VEHICLE NETWORK DATA
+const vehicles = [
+    {
+        id: "A",
+        distance: 42,
+        direction: "East →",
+        signal: "Strong",
+        relevance: 94
+    },
+    {
+        id: "B",
+        distance: 67,
+        direction: "East →",
+        signal: "Strong",
+        relevance: 88
+    },
+    {
+        id: "C",
+        distance: 85,
+        direction: "West ←",
+        signal: "Medium",
+        relevance: 18
+    },
+    {
+        id: "D",
+        distance: 102,
+        direction: "North ↑",
+        signal: "Weak",
+        relevance: 25
+    },
+    {
+        id: "E",
+        distance: 135,
+        direction: "East →",
+        signal: "Medium",
+        relevance: 71
+    }
+];
 
+// NETWORK SCAN
+scanButton.addEventListener("click", function () {
+
+    scanButton.disabled = true;
+    scanButton.textContent = "📡 SCANNING NETWORK...";
+
+    vehicles.forEach((vehicle, index) => {
+
+        setTimeout(() => {
+
+            const card = vehicleCards[index];
+
+            if (!card) return;
+
+            // Remove previous network information
+            const oldNetworkInfo = card.querySelector(".network-info");
+
+            if (oldNetworkInfo) {
+                oldNetworkInfo.remove();
+            }
+
+            // Create network information
+            const networkInfo = document.createElement("div");
+
+            networkInfo.className = "network-info";
+
+            networkInfo.innerHTML = `
+                <span>Signal</span>
+                <strong>${vehicle.signal}</strong>
+
+                <span>Relevance</span>
+                <strong>${vehicle.relevance}%</strong>
+
+                <span>Network</span>
+                <strong>CONNECTED</strong>
+            `;
+
+            card.appendChild(networkInfo);
+
+            // Update waiting status
+            if (vehicleStatuses[index]) {
+
+                vehicleStatuses[index].textContent = "CONNECTED";
+
+                vehicleStatuses[index].classList.remove(
+                    "waiting",
+                    "alerted",
+                    "relaying"
+                );
+
+                vehicleStatuses[index].classList.add("connected");
+            }
+
+        }, index * 600);
+
+    });
+
+
+    setTimeout(() => {
+        scanButton.disabled = false;
+        scanButton.textContent = "📡 RESCAN NETWORK";
+
+    }, 3500);
+
+});
+
+// EMERGENCY SYSTEM
 emergencyButton.addEventListener("click", function () {
 
     // Prevent multiple clicks

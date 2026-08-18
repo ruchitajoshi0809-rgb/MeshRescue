@@ -384,3 +384,80 @@ footer {
     cursor: not-allowed;
     opacity: 0.8;
 }
+
+.scan-btn {
+    margin-top: 12px;
+    padding: 12px 20px;
+
+    background: transparent;
+    border: 1px solid #334155;
+    border-radius: 8px;
+
+    color: #cbd5e1;
+
+    font-weight: 600;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.scan-btn:hover {
+    border-color: #ff5a52;
+    color: #ff5a52;
+}
+
+.scan-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Network information inside vehicle cards */
+
+.network-info {
+    margin-top: 12px;
+    padding-top: 10px;
+
+    border-top: 1px solid #26313d;
+
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px;
+
+    font-size: 11px;
+}
+
+.network-info span {
+    color: #718096;
+}
+
+.network-info strong {
+    color: #dbe4ee;
+}
+
+/* Connected vehicle */
+
+.vehicle-status.connected {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.10);
+
+    border: 1px solid rgba(74, 222, 128, 0.30);
+}
+
+/* Alerted vehicle */
+
+.vehicle-status.alerted {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+
+    border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+/* Relaying vehicle */
+
+.vehicle-status.relaying {
+    color: #ffb84d;
+    background: rgba(255, 184, 77, 0.12);
+
+    border: 1px solid rgba(255, 184, 77, 0.35);
+}
+
