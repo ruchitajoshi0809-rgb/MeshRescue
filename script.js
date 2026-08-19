@@ -53,6 +53,46 @@ const vehicles = [
     }
 ];
 
+// DYNAMIC RELAY SELECTION 
+
+function calculateRelayScore(vehicle) {
+
+    // Signal score
+    let signalScore = 0;
+
+    if (vehicle.signal === "Strong") {
+        signalScore = 100;
+    }
+    else if (vehicle.signal === "Medium") {
+        signalScore = 70;
+    }
+    else {
+        signalScore = 40;
+    }
+
+    // Distance score
+    // Closer vehicle = better relay
+    let distanceScore = Math.max(0, 100 - (vehicle.distance / 150) * 100);
+
+    //Final weighted score
+    const relayScore = (signalScore * 0.4) + (vehicle.relevance * 0.4) + (distanceScore * 0.2);
+    return Math.round(relayScore);
+}
+
+function selectBestRelay() {
+    const scoredVehicles = vehicles.map(vehicle => {
+        return {
+            ...vehicle,
+            relayScore: calculateRelayScore(vehicle)
+        };
+
+    });
+
+    // Highest score first
+    scoredVehicles.sort((a, b)=> b.relayScore - a.relayScore);
+    return scoredVehicles;
+}
+
 // NETWORK SCAN
 scanButton.addEventListener("click", function () {
 
@@ -130,6 +170,10 @@ scanButton.addEventListener("click", function () {
 
         <span>
         ${winner.signal} Signal
+        </span>
+
+        <span>
+        ⭐ PRIMARY RELAY 
         </span>
         `;
     }, 3500);
