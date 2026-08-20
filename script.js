@@ -11,6 +11,7 @@ const alertCount = document.getElementById("alertCount");
 const vehicleStatuses = document.querySelectorAll(".vehicle-status");
 const vehicleCards = document.querySelectorAll(".vehicle-card");
 const bestRelay = document.getElementById("bestRelay");
+const relayPath = document.getElementById("relayPath");
 
 let emergencyRunning = false;
 
@@ -88,9 +89,46 @@ function selectBestRelay() {
 
     });
 
-    // Highest score first
+       // Highest score first
     scoredVehicles.sort((a, b)=> b.relayScore - a.relayScore);
     return scoredVehicles;
+}
+
+function updateRelayPath(scoredVehicles) {
+    const selectedVehicles = scoredVehicles
+    .filter(vehicle => vehicle.relayScore >= 50)
+    .slice(0,3);
+
+    let pathHTML = `
+    <div class ="relay-node">
+    <div class="relay-icon">🚑</div>
+    <strong>AMBULANCE</strong>
+    <small>SOURCE</small>
+    </div>
+    `;
+
+    selectedVehicles.forEach((vehicle, index) => {
+
+        pathHTML += `
+        <div class="relay-arrow">→</div>
+        <div class="relay-node">
+        <div class="relay-icon">🚗</div>
+        <strong>NODE ${vehicle.id}</strong>
+        <small>RELAY ${index + 1}</small>
+        </div>
+        `;
+    });
+
+    pathHTML += `
+    <div class="relay-arrow">→</div> 
+    
+    <div class="relay-node">
+    <div class="relay-icon">🏥</div>
+    <strong>EMERGENCY</strong>
+    <small>DESTINATION</small>
+    </div>
+    `;
+    relayPath.innerHTML = pathHTML;
 }
 
 // NETWORK SCAN
@@ -115,6 +153,10 @@ scanButton.addEventListener("click", function () {
             }
 
             // Create network information
+            const networkInfo = document.createElement("div");
+
+            networkInfo.className = "network-info";
+            
             const relayScore = calculateRelayScore(vehicle);
 
             networkInfo.innerHTML = `
@@ -176,10 +218,8 @@ scanButton.addEventListener("click", function () {
         ⭐ PRIMARY RELAY 
         </span>
         `;
-    }, 3500);
+        updateRelayPath(scoredVehicles);
 
-
-    setTimeout(() => {
         scanButton.disabled = false;
         scanButton.textContent = "📡 RESCAN NETWORK";
 
@@ -328,9 +368,8 @@ function selectBestRelay() {
     });
 
     scoredVehicles.sort(
-        (a,b) => b.relayScore - a.relayScore
-    );
+        (a,b) => b.relayScore - a.relayScore);
 
     return scoredVehicles;
 }
-console.log(selectBestRelay());
+
