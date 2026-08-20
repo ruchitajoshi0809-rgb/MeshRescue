@@ -14,6 +14,7 @@ const bestRelay = document.getElementById("bestRelay");
 const relayPath = document.getElementById("relayPath");
 
 let emergencyRunning = false;
+let selectedRelayVehicles = [];
 
 // VEHICLE NETWORK DATA
 const vehicles = [
@@ -226,6 +227,10 @@ scanButton.addEventListener("click", function () {
 
         const winner = scoredVehicles[0];
 
+        selectedRelayVehicles = scoredVehicles
+        .filter(vehicle => vehicle.relayScore >= 50)
+        .slice(0, 3);
+
         bestRelay.innerHTML = `
         <strong>🚗 VEHICLE ${winner.id}</strong>
 
@@ -264,10 +269,17 @@ emergencyButton.addEventListener("click", function () {
 
     emergencyRunning = true;
 
-    // STEP 1 — Emergency detected
+    if (selectedRelayVehicles.length === 0) {
+        const scoredVehicles = selectBestRelay();
+
+        selectedRelayVehicles = scoredVehicles
+        .filter(vehicle => vehicle.relayScore >= 50)
+        .slice(0, 3);
+    }
+
+    // STEP 1 - Emergency detected
     emergencyStatus.textContent = "EMERGENCY DETECTED";
-    statusMessage.textContent =
-        "Emergency alert has been created.";
+    statusMessage.textContent = "Emergency alert has been created.";
 
     relayStatus.textContent = "DETECTING";
 
@@ -278,81 +290,69 @@ emergencyButton.addEventListener("click", function () {
 
         emergencyStatus.textContent = "AI SELECTING RELAY";
 
-        statusMessage.textContent =
-            "Finding the most relevant nearby vehicles...";
+        statusMessage.textContent = "Finding the most relevant nearby vehicles...";
 
         relayStatus.textContent = "SELECTING";
 
     }, 1500);
 
 
-    // STEP 3 — First vehicle receives alert
-    setTimeout(function () {
+    // STEP 3 — Dynamic relay forwarding 
+    selectedRelayVehicles.forEach((vehicle, index) => {
+        setTimeout(function () {
+            const vehicleIndex = vehicles.findIndex(
+            v => v.id === vehicle.id
+        );
 
         emergencyStatus.textContent = "ALERT FORWARDING";
 
         statusMessage.textContent =
-            "Node A received the emergency alert.";
+            `Node ${vehicle.id} is forwarding the emergency alert.`;
 
         relayStatus.textContent = "FORWARDING";
 
-        hopCount.textContent = "1";
+        hopCount.textContent = index + 1;
 
-        if (vehicleStatuses[0]) {
-            vehicleStatuses[0].textContent = "ALERTED";
-            vehicleStatuses[0].classList.add("alerted");
+        if (vehicleStatuses[vehicleIndex]) {
+            vehicleStatuses[vehicleIndex].textContent = index === selectedRelayVehicles.length - 1
+             ? "ALERTED"
+             : "RELAYING";
+
+            vehicleStatuses[vehicleIndex].classList.remove (
+                "waiting",
+                "connected",
+                "alerted",
+                "relaying"
+            );
+            
+            vehicleStatuses[vehicleIndex].classList.add( index === selectedRelayVehicles.length - 1
+                ? "alerted"
+                : "relaying"
+            ); 
         }
 
-    }, 3000);
+
+        }, 3000 + (index * 1500));
+    });
 
 
-    // STEP 4 — Second hop
-    setTimeout(function () {
-
-        statusMessage.textContent =
-            "Node B is relaying the emergency alert.";
-
-        hopCount.textContent = "2";
-
-        if (vehicleStatuses[1]) {
-            vehicleStatuses[1].textContent = "RELAYING";
-            vehicleStatuses[1].classList.add("relaying");
-        }
-
-    }, 4500);
-
-
-    // STEP 5 — Third hop
-    setTimeout(function () {
-
-        statusMessage.textContent =
-            "Node E received the emergency alert.";
-
-        hopCount.textContent = "3";
-
-        if (vehicleStatuses[4]) {
-            vehicleStatuses[4].textContent = "ALERTED";
-            vehicleStatuses[4].classList.add("alerted");
-        }
-
-    }, 6000);
-
-
-    // STEP 6 — Complete
+    // Complete
+    const completionTime = 3000 + (selectedRelayVehicles.length * 1500) + 1000;
+    
     setTimeout(function () {
 
         emergencyStatus.textContent = "EMERGENCY ACTIVE";
 
         statusMessage.textContent =
-            "Alert successfully propagated through 3 hops.";
+            `Alert successfully propagated through ${selectedRelayVehicles.length}hops.`;
 
         relayStatus.textContent = "COMPLETE";
 
-        alertCount.textContent = "3";
+        alertCount.textContent = selectedRelayVehicles.length;
 
         emergencyButton.textContent = "✅ ALERT PROPAGATED";
 
-    }, 7500);
+    }, completionTime);
 
 });
 
