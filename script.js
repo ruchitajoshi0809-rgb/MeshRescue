@@ -54,6 +54,33 @@ const vehicles = [
     }
 ];
 
+async function loadVehiclesFromBackend() {
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/vehicles"
+        );
+
+        if(!response.ok) {
+            throw new Error("Failed to fetch vehicles");
+        }
+
+        const backendVehicles = await response.json();
+
+        console.log("Vehicles received from backend:", backendVehicles);
+
+    vehicles.length = 0;
+    vehicles.push(...backendVehicles);
+
+    console.log("Vehicles now using backend data:",vehicles);
+    } catch(error) {
+        console.error("Backend connection error:",error);
+    }
+    
+}
+loadVehiclesFromBackend()
+
 // DYNAMIC RELAY SELECTION 
 
 function calculateRelayScore(vehicle) {
@@ -156,7 +183,7 @@ scanButton.addEventListener("click", function () {
             const networkInfo = document.createElement("div");
 
             networkInfo.className = "network-info";
-            
+
             const relayScore = calculateRelayScore(vehicle);
 
             networkInfo.innerHTML = `
@@ -329,47 +356,5 @@ emergencyButton.addEventListener("click", function () {
 
 });
 
-function calculateRelayScore(vehicle) {
-    let score = 0;
 
-    //Direction
-    if(vehicle.direction === "East →") {
-        score += 40;
-    } else {
-        score += 10;
-    }
-
-    if (vehicle.distance <= 50) {
-        score += 35;
-    } else if (vehicle.distance <= 100) {
-        score += 25;
-    } else {
-        score += 15;
-    }
-
-    // Signal
-    if(vehicle.signal === "Strong") {
-        score += 25;
-    } else if (vehicle.signal === "Medium") {
-        score += 15;
-    } else {
-        score += 5;
-    }
-    return score;
-
-}
-
-function selectBestRelay() {
-    const scoredVehicles = vehicles.map(vehicle => {
-        return {
-            ...vehicle,
-            relayScore: calculateRelayScore(vehicle)
-        };
-    });
-
-    scoredVehicles.sort(
-        (a,b) => b.relayScore - a.relayScore);
-
-    return scoredVehicles;
-}
 
