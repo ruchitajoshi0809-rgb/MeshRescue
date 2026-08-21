@@ -82,6 +82,85 @@ async function loadVehiclesFromBackend() {
 }
 loadVehiclesFromBackend()
 
+async function fetchRelayData() {
+    try {
+        const response = await fetch("http://127.0.0.1:5000/api/relay");
+
+        const data = await response.json();
+
+        console.log("Relay data from backend:", data);
+
+        const winner = data.bestRelay;
+
+        bestRelay.innerHTML = `
+            <strong>🚗 VEHICLE ${winner.id}</strong>
+
+            <span>
+                Relay Score: ${winner.relayScore}/100
+            </span>
+
+            <span>
+                ${winner.distance}m • ${winner.direction}
+            </span>
+
+            <span>
+                ${winner.signal} Signal
+            </span>
+
+            <span>
+                ⭐ PRIMARY RELAY
+            </span>
+        `;
+
+        updateRelayPath(data.relayPath);
+
+    } catch (error) {
+        console.error("Relay API error:", error);
+    }
+}
+
+async function startEmergencyWithBackend() {
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/relay"
+        );
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch relay decision");
+        }
+
+        const data = await response.json();
+
+        console.log("Emergency relay path:", data.relayPath);
+
+        const path = data.relayPath;
+        
+        selectedRelayVehicles = path;
+
+        // Emergency status
+        emergencyStatus.textContent = "ACTIVE";
+
+        // AI status
+        relayStatus.textContent = "PROPAGATING";
+
+        // Number of hops
+        hopCount.textContent = path.length;
+
+        // Number of vehicles alerted
+        alertCount.textContent = path.length;
+
+        // Update relay path on screen
+        updateRelayPath(path);
+
+    } catch (error) {
+
+        console.error("Emergency error:", error);
+
+    }
+}
+
 // DYNAMIC RELAY SELECTION 
 
 function calculateRelayScore(vehicle) {
@@ -221,41 +300,58 @@ scanButton.addEventListener("click", function () {
 
     });
 
-    setTimeout(() => {
+setTimeout(async () => {
 
-        const scoredVehicles = selectBestRelay();
+    try {
 
-        const winner = scoredVehicles[0];
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/relay"
+        );
 
-        selectedRelayVehicles = scoredVehicles
-        .filter(vehicle => vehicle.relayScore >= 50)
-        .slice(0, 3);
+        if (!response.ok) {
+            throw new Error("Relay API request failed");
+        }
+
+        const data = await response.json();
+
+        console.log("Backend relay decision:", data);
+
+        const winner = data.bestRelay;
 
         bestRelay.innerHTML = `
-        <strong>🚗 VEHICLE ${winner.id}</strong>
+            <strong>🚗 VEHICLE ${winner.id}</strong>
 
-        <span>
-        Relay Score: ${winner.relayScore}/100
-        </span>
+            <span>
+                Relay Score: ${winner.relayScore}/100
+            </span>
 
-        <span>
-        ${winner.distance}m • ${winner.direction}
-        </span>
+            <span>
+                ${winner.distance}m • ${winner.direction}
+            </span>
 
-        <span>
-        ${winner.signal} Signal
-        </span>
+            <span>
+                ${winner.signal} Signal
+            </span>
 
-        <span>
-        ⭐ PRIMARY RELAY 
-        </span>
+            <span>
+                ⭐ PRIMARY RELAY
+            </span>
         `;
-        updateRelayPath(scoredVehicles);
+
+        updateRelayPath(data.relayPath);
 
         scanButton.disabled = false;
         scanButton.textContent = "📡 RESCAN NETWORK";
 
-    }, 3500);
+    } catch (error) {
+
+        console.error("Backend relay error:", error);
+
+        scanButton.disabled = false;
+        scanButton.textContent = "📡 RESCAN NETWORK";
+    }
+
+}, 3500);
 
 });
 
@@ -268,6 +364,8 @@ emergencyButton.addEventListener("click", function () {
     }
 
     emergencyRunning = true;
+
+    startEmergencyWithBackend();
 
     if (selectedRelayVehicles.length === 0) {
         const scoredVehicles = selectBestRelay();
