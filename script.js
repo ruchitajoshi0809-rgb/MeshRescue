@@ -585,5 +585,10 @@ resetButton.addEventListener("click",function() {
         );
         status.classList.add("connected");
     });
+
+    bestRelay.innerHTML = `
+    <span>Waiting for network scan...</span>
+    `;
+    updateRelayPath([]);
     console.log("Emergency system reset");
 })
