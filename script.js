@@ -15,7 +15,7 @@ const relayPath = document.getElementById("relayPath");
 
 let emergencyRunning = false;
 let selectedRelayVehicles = [];
-let emergencyHistory = [];
+let emergencyHistory = JSON.parse(localStorage.getItem("emergencyHistory")) || [];
 
 // VEHICLE NETWORK DATA
 const vehicles = [
@@ -250,6 +250,13 @@ function addEmergencyHistory(path) {
 
     const historyNumber = emergencyHistory.length + 1;
 
+    const now = new Date();
+
+    const time = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+
     const historyItem = document.createElement("div");
 
     historyItem.className = "history-item";
@@ -269,6 +276,10 @@ function addEmergencyHistory(path) {
     Vehicles Alerted: ${path.length}
     </span>
 
+    <span> 
+    Time: ${time}
+    </span>
+
     <span>
     Status:COMPLETE
     `;
@@ -280,8 +291,54 @@ function addEmergencyHistory(path) {
         route: path.map(vehicle => vehicle.id),
         hops: path.length,
         vehiclesAlerted: path.length,
+        time: time,
         status: "COMPLETE"
     });
+
+    localStorage.setItem("emergencyHistory", JSON.stringify(emergencyHistory));
+}
+
+function loadEmergencyHistory() {
+
+    const historyContainer = document.getElementById("emergencyHistory");
+
+    if(!historyContainer) {
+        console.error("Emergency history container not found");
+        return;
+    }
+
+    const savedHistory = JSON.parse(localStorage.getItem("emergencyHistory")) || [];
+
+    savedHistory.forEach(history => {
+        const historyItem = document.createElement("div");
+        historyItem.className = "history-item";
+
+        historyItem.innerHTML = `
+        <strong>Emergency #${history.id}</strong>
+        
+        <span> 
+        Route: ${history.route.join("→")}
+        </span>
+        
+        <span>
+        Hops: ${history.length}
+        </span>
+        
+        <span>
+        Vehicles Alerted: ${history.vehiclesAlerted}
+        </span>
+        
+        <span> 
+        Time: ${history.time}
+        </span>
+        
+        <span>
+        Status: ${history.status}
+        </span>
+        `;
+
+        historyContainer.prepend(historyItem);
+    })
 }
 
 // NETWORK SCAN
@@ -502,5 +559,5 @@ emergencyButton.addEventListener("click", function () {
 
 });
 
-
+loadEmergencyHistory();
 
