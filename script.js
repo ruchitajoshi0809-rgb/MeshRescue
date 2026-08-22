@@ -15,6 +15,7 @@ const relayPath = document.getElementById("relayPath");
 
 let emergencyRunning = false;
 let selectedRelayVehicles = [];
+let emergencyHistory = [];
 
 // VEHICLE NETWORK DATA
 const vehicles = [
@@ -70,11 +71,11 @@ async function loadVehiclesFromBackend() {
         const backendVehicles = await response.json();
 
         console.log("Vehicles received from backend:", backendVehicles);
-
-    vehicles.length = 0;
-    vehicles.push(...backendVehicles);
-
-    console.log("Vehicles now using backend data:",vehicles);
+        
+        vehicles.length = 0;
+        vehicles.push(...backendVehicles);
+        
+        console.log("Vehicles now using backend data:",vehicles);
     } catch(error) {
         console.error("Backend connection error:",error);
     }
@@ -236,6 +237,51 @@ function updateRelayPath(scoredVehicles) {
     </div>
     `;
     relayPath.innerHTML = pathHTML;
+}
+
+function addEmergencyHistory(path) {
+
+    const historyContainer = document.getElementById("emergencyHistory");
+
+    if(!historyContainer) {
+        console.error("Emergency history container not found");
+        return;
+    }
+
+    const historyNumber = emergencyHistory.length + 1;
+
+    const historyItem = document.createElement("div");
+
+    historyItem.className = "history-item";
+
+    historyItem.innerHTML = `
+    <strong>Emergency #${historyNumber}</strong>
+
+    <span> 
+    Route: ${path.map(vehicle => vehicle.id).join("→")}
+    </span>
+
+    <span>
+    Hops: ${path.length}
+    </span>
+
+    <span>
+    Vehicles Alerted: ${path.length}
+    </span>
+
+    <span>
+    Status:COMPLETE
+    `;
+
+    historyContainer.prepend(historyItem);
+
+    emergencyHistory.push({
+        id: historyNumber,
+        route: path.map(vehicle => vehicle.id),
+        hops: path.length,
+        vehiclesAlerted: path.length,
+        status: "COMPLETE"
+    });
 }
 
 // NETWORK SCAN
@@ -449,6 +495,8 @@ emergencyButton.addEventListener("click", function () {
         alertCount.textContent = selectedRelayVehicles.length;
 
         emergencyButton.textContent = "✅ ALERT PROPAGATED";
+
+        addEmergencyHistory(selectedRelayVehicles);
 
     }, completionTime);
 
