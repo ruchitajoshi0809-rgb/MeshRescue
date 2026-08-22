@@ -1,6 +1,7 @@
 const emergencyButton = document.getElementById("emergencyButton");
 const scanButton = document.getElementById("scanButton");
 const resetButton = document.getElementById("resetButton");
+const clearHistoryButton = document.getElementById("clearHistoryButton");
 
 const emergencyStatus = document.getElementById("emergencyStatus");
 const statusMessage = document.getElementById("statusMessage");
@@ -223,7 +224,7 @@ function updateRelayPath(scoredVehicles) {
         `;
         return;
     }
-    
+
     const selectedVehicles = scoredVehicles
     .filter(vehicle => vehicle.relayScore >= 50)
     .slice(0,3);
@@ -584,6 +585,7 @@ emergencyButton.addEventListener("click", function () {
 
 loadEmergencyHistory();
 
+//RESET BUTTON
 resetButton.addEventListener("click",function() {
 
     emergencyRunning = false;
@@ -612,3 +614,15 @@ resetButton.addEventListener("click",function() {
     updateRelayPath([]);
     console.log("Emergency system reset");
 })
+
+//CLEAR EMERGENCY HISTORY
+
+clearHistoryButton.addEventListener("click", function () {
+    emergencyHistory =[];
+    localStorage.removeItem("emergencyHistory");
+    const historyContainer = document.getElementById("emergencyHistory");
+    historyContainer.innerHTML = `
+    <p>No emergency alerts yet.</p>
+    `;
+    console.log("Emergency history cleared");
+});
