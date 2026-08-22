@@ -1,8 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+emergency_logs = []
 
 @app.route("/")
 def home():
@@ -130,6 +132,31 @@ def get_best_relay():
         "bestRelay": vehicles[0],
         "relayPath": vehicles[:3]
     })
+
+@app.route("/api/emergencies", methods=["POST"])
+def save_emergency():
+
+    data = request.get_json()
+
+    emergency = {
+        "id": len(emergency_logs) + 1,
+        "route": data.get("route", []),
+        "hops": data.get("hops", 0),
+        "vehiclesAlerted": data.get("vehiclesAlerted", 0),
+        "status": data.get("status", "COMPLETE")
+    }
+
+    emergency_logs.append(emergency)
+
+    return jsonify({
+        "message": "Emergency saved successfully",
+        "emergency": emergency
+    }), 201
+
+@app.route("/api/emergencies", methods=["GET"])
+def get_emergency_history():
+
+    return jsonify(emergency_logs)
 
 if __name__ == "__main__":
     app.run(debug=True)

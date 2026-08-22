@@ -317,6 +317,31 @@ function addEmergencyHistory(path) {
         status: "COMPLETE"
     });
 
+    fetch("http://127.0.0.1:5000/api/emergencies",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            route: path.map(vehicle => vehicle.id),
+            hops: path.length,
+            vehiclesAlerted: path.length,
+            status: "COMPLETE"
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Failed to save emergency");
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Emergency saved to backend:", data);
+    })
+    .catch(error => {
+        console.error("Emergency history backend error:", error);
+    });
+
     localStorage.setItem("emergencyHistory", JSON.stringify(emergencyHistory));
 }
 
