@@ -1,5 +1,6 @@
 const emergencyButton = document.getElementById("emergencyButton");
 const scanButton = document.getElementById("scanButton");
+const resetButton = document.getElementById("resetButton");
 
 const emergencyStatus = document.getElementById("emergencyStatus");
 const statusMessage = document.getElementById("statusMessage");
@@ -321,7 +322,7 @@ function loadEmergencyHistory() {
         </span>
         
         <span>
-        Hops: ${history.length}
+        Hops: ${history.hops}
         </span>
         
         <span>
@@ -555,9 +556,34 @@ emergencyButton.addEventListener("click", function () {
 
         addEmergencyHistory(selectedRelayVehicles);
 
+        emergencyRunning = false;
+
     }, completionTime);
 
 });
 
 loadEmergencyHistory();
 
+resetButton.addEventListener("click",function() {
+
+    emergencyRunning = false;
+    selectedRelayVehicles = [];
+
+    emergencyStatus.textContent = "SYSTEM READY";
+    statusMessage.textContent = "Waiting for an emergency alert...";
+    relayStatus.textContent = "READY";
+    hopCount.textContent = "0";
+    alertCount.textContent = "0";
+    emergencyButton.textContent = "🚨 START EMERGENCY";
+    
+    vehicleStatuses.forEach(status => {
+        status.textContent = "CONNECTED";
+        status.classList.remove(
+            "waiting",
+            "alerted",
+            "relaying"
+        );
+        status.classList.add("connected");
+    });
+    console.log("Emergency system reset");
+})

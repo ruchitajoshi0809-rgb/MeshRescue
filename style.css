@@ -621,3 +621,29 @@ footer {
     color: #48e28a;
     font-weight: 700;
 }
+
+.reset-btn {
+    padding: 14px 24px;
+    margin-left: 10px;
+    
+    background: #1f2937;
+    color: #ffffff;
+
+    border: 1px solid #4b5563;
+    border-radius: 8px;
+    
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.reset-btn:hover {
+    background: #374151;
+    border-color: #6b7280;
+}
+
+.reset-btn:active {
+    transform: scale(0.98);
+}
