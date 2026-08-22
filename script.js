@@ -204,6 +204,26 @@ function selectBestRelay() {
 }
 
 function updateRelayPath(scoredVehicles) {
+
+    if(!scoredVehicles || scoredVehicles.length === 0){
+        relayPath.innerHTML = `
+        <div class="relay-node">
+        <div class="relay-icon">🚑</div>
+        <strong>AMBULANCE</strong>
+        <small>SOURCE</small>
+        </div>
+
+        <div class="relay-arrow">→</div>
+
+        <div class="relay-node">
+        <div class="relay-icon">🏥</div>
+        <strong>EMERGENCY</strong>
+        <small>DESTINATION</small>
+        </div>
+        `;
+        return;
+    }
+    
     const selectedVehicles = scoredVehicles
     .filter(vehicle => vehicle.relayScore >= 50)
     .slice(0,3);
